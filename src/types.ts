@@ -16,7 +16,16 @@ export type diet = {
     meals: number,
     carbs: number,
     protein: number,
-    fats: number
-}
+    fats: number,
+    mealMacros?: macros[]
+};
 
-type goals = "GAIN" | "LOSE" | "MAINTAIN";
+export type macros = {
+    name: string,
+    count: number
+};
+
+type goals = 
+"GAIN" |
+ "LOSE" | 
+ "MAINTAIN";

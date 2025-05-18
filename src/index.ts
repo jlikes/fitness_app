@@ -1,4 +1,4 @@
-import { person, diet } from "./types";
+import { person, diet, macros } from "./types";
 
 var justin : person = {
     name: 'Justin',
@@ -22,7 +22,7 @@ var rose : person = {
     goal: "LOSE"
 };
 
-const users = [justin, rose];
+const users = [justin,rose];
 
 
 function calcTdee(person: person){
@@ -47,6 +47,16 @@ function calcCalWithGoal(person: person){
     else return person.tdee;
 }
 
+function calcProteinWithGoal(person: person, cals: number){
+    if(person.goal === "LOSE") return Math.floor((cals*.4)/4);
+    else return Math.floor((cals*.3)/4);
+}
+
+function calcFatsWithGoal(person: person, cals: number){
+    if(person.goal === "LOSE") return Math.floor((cals*.2)/4);
+    else return Math.floor((cals*.3)/4);
+}
+
 //4g cal per gram of carb, 4g cal per gram of carb, 9 cal per gram of fat
 //Builds out calories and numbers and attached to a diet that attaches to that person
 //weight loss: 40/40/20 Weight Gain/ Maintain: 40/30/30
@@ -55,14 +65,27 @@ function makeDiet(person: person){
     var diet: diet = {
         name: `${person.name}'s Diet`,
         calories: Math.floor(goalCals),
-        meals: 5,
+        meals: 6,
         carbs: Math.floor((goalCals * .4)/4),
-        protein: Math.floor((goalCals * .4)/4),
+        protein: calcProteinWithGoal(person,goalCals),
         fats: Math.floor((goalCals * .2)/9)
     }
     person.diet = diet;
+    const carbsPerMeal : macros = {
+        name: "Carbs / Meal",
+        count: person.diet.carbs / person.diet.meals
+    }
+    const proteinPerMeal : macros = {
+        name: "Protein / Meal",
+        count: person.diet.protein / person.diet.meals
+    }
+    const fatsPerMeal : macros = {
+        name: "Fats / Meal",
+        count: person.diet.fats / person.diet.meals
+    }
+    person.diet.mealMacros = [carbsPerMeal,proteinPerMeal,fatsPerMeal];
     console.log(person);
-    console.log(`\nSplit evenly accross ${person.diet.meals} meals:\n${Math.floor(person.diet.calories/person.diet.meals)} calories per meal\n${Math.floor(person.diet.protein/person.diet.meals)} protein per meal\n${Math.floor(person.diet.carbs/person.diet.meals)} carbs per meal\n${Math.floor(person.diet.fats/person.diet.meals)} fats per meal\n`)
+    console.log(person.diet.mealMacros);
 }
 
 users.forEach(person => {
